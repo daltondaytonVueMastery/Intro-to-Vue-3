@@ -11,7 +11,7 @@ app.component("product-display", {
     <div class="product-display">
       <div class="product-container">
         <div class="product-image">
-          <img v-bind:src="image" :alt="title" />
+          <img v-bind:src="image">
         </div>
         <div class="product-info">
           <h1>{{ title }}</h1>
@@ -20,26 +20,29 @@ app.component("product-display", {
           <p v-else>Out of Stock</p>
 
           <p>Shipping: {{ shipping }}</p>
-          <product-details :details="details"></product-details>
+          <ul>
+            <li v-for="detail in details">{{ detail }}</li>
+          </ul>
 
-          <div
-            v-for="(variant, index) in variants"
-            :key="variant.id"
-            @mouseover="updateVariant(index)"
-            class="color-circle"
-            :style="{ backgroundColor: variant.color }"
-          ></div>
-
-          <button
-            class="button"
-            :class="{ disabledButton: !inStock }"
-            :disabled="!inStock"
-            v-on:click="addToCart"
-          >
+          <div 
+            v-for="(variant, index) in variants" 
+            :key="variant.id" 
+            @mouseover="updateVariant(index)" 
+            class="color-circle" 
+            :style="{ backgroundColor: variant.color }">
+          </div>
+          
+          <button 
+            class="button" 
+            :class="{ disabledButton: !inStock }" 
+            :disabled="!inStock" 
+            v-on:click="addToCart">
             Add to Cart
           </button>
         </div>
       </div>
+      <review-list v-if="reviews.length" :reviews="reviews"></review-list>
+      <review-form @review-submitted="addReview"></review-form>
     </div>`,
   data() {
     return {
@@ -61,14 +64,18 @@ app.component("product-display", {
           quantity: 0,
         },
       ],
+      reviews: [],
     };
   },
   methods: {
     addToCart() {
-      this.cart += 1;
+      this.$emit("add-to-cart", this.variants[this.selectedVariant].id);
     },
     updateVariant(index) {
       this.selectedVariant = index;
+    },
+    addReview(review) {
+      this.reviews.push(review);
     },
   },
   computed: {
@@ -85,7 +92,7 @@ app.component("product-display", {
       if (this.premium) {
         return "Free";
       }
-      return "2.99";
+      return 2.99;
     },
   },
 });
