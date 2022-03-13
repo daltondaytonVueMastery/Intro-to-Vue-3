@@ -40,13 +40,6 @@ app.component("product-display", {
             Add to Cart
           </button>
 
-          <button 
-            class="button" 
-            :class="{ disabledButton: !inStock }" 
-            :disabled="!inStock" 
-            v-on:click="removeFromCart">
-            Remove from Cart
-          </button>
         </div>
       </div>
       <review-list v-if="reviews.length" :reviews="reviews"></review-list>
@@ -69,7 +62,7 @@ app.component("product-display", {
           id: 2235,
           color: "blue",
           image: "./assets/images/socks_blue.jpg",
-          quantity: 10,
+          quantity: 0,
         },
       ],
       reviews: [],
@@ -78,9 +71,6 @@ app.component("product-display", {
   methods: {
     addToCart() {
       this.$emit("add-to-cart", this.variants[this.selectedVariant].id);
-    },
-    removeFromCart() {
-      this.$emit("remove-from-cart", this.variants[this.selectedVariant].id);
     },
     updateVariant(index) {
       this.selectedVariant = index;
